@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Outer Circle Background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.2"
+        android:pathData="M60,10 C85.957,10 106,30.043 106,56 C106,81.957 85.957,102 60,102 C34.043,102 14,81.957 14,56 C14,30.043 34.043,10 60,10 Z" />
+
+    <!-- Main Heart Shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,35 C50,25 35,25 35,40 C35,50 50,65 60,75 C70,65 85,50 85,40 C85,25 70,25 60,35 Z" />
+
+    <!-- Pulse Lines (no strokeLinecap allowed) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:strokeLineJoin="round"
+        android:strokeMiterLimit="10"
+        android:pathData="M30,56 L40,50 L50,62 L70,48 L90,56" />
+
+    <!-- Small accent circles -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M25,30 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M95,30 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M25,82 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M95,82 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+
+</vector>

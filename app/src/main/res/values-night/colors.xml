@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_bg">#000000</color>
+    
+    <!-- Primary Colors - Lighter for dark mode -->
+    <color name="smartfit_primary">#6BA3E8</color>
+    <color name="smartfit_primary_dark">#8BA5FF</color>
+    <color name="smartfit_primary_light">#9BB5F0</color>
+    
+    <!-- Background Colors - Dark theme -->
+    <color name="smartfit_background">#121212</color>
+    <color name="smartfit_card">#1E1E1E</color>
+    <color name="smartfit_card_elevated">#252525</color>
+    
+    <!-- Text Colors - Light for dark backgrounds -->
+    <color name="smartfit_grey">#B0B0B0</color>
+    <color name="smartfit_grey_light">#808080</color>
+    <color name="smartfit_text_primary">#FFFFFF</color>
+    <color name="smartfit_text_secondary">#B0B0B0</color>
+    
+    <!-- Status Colors -->
+    <color name="smartfit_success">#10B981</color>
+    <color name="smartfit_warning">#F59E0B</color>
+    <color name="error_background">#EF4444</color>
+    <color name="success_background">#10B981</color>
+    
+    <!-- Gradient Colors - Adjusted for dark mode -->
+    <color name="smartfit_gradient_start">#5F7CE8</color>
+    <color name="smartfit_gradient_end">#8B7AFF</color>
+    <color name="smartfit_gradient_mid">#6F8AFF</color>
+    
+    <!-- Accent Colors -->
+    <color name="smartfit_diastolic_normal">#10B981</color>
+    <color name="smartfit_accent_purple">#8B7AFF</color>
+    <color name="smartfit_accent_teal">#14B8A6</color>
+    
+    <!-- Divider -->
+    <color name="smartfit_divider">#333333</color>
+</resources>

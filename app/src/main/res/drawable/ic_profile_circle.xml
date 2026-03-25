@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@color/smartfit_primary"
+        android:fillType="nonZero"
+        android:pathData="M12,2a10,10 0 1,0 0,20 10,10 0 0,0 0,-20zM12,6.5a3,3 0 1,1 0,6 3,3 0 0,1 0,-6zM12,19c-2.33,0 -4.32,-1.18 -5.5,-3 0.02,-1.66 3.33,-2.58 5.5,-2.58 2.17,0 5.48,0.92 5.5,2.58 -1.18,1.82 -3.17,3 -5.5,3z" />
+</vector>
+

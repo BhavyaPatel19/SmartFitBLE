@@ -1,0 +1,30 @@
+[versions]
+kotlin = "1.9.22"
+agp = "8.2.2"
+
+material = "1.12.0"
+navigation = "2.7.7"
+ktor = "2.3.8"
+serialization = "1.6.3"
+coroutines = "1.8.1"
+
+[libraries]
+material = { module = "com.google.android.material:material", version.ref = "material" }
+navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library =     { id = "com.android.library",     version.ref = "agp" }
+
+kotlin-android =           { id = "org.jetbrains.kotlin.android",           version.ref = "kotlin" }
+kotlin-multiplatform =     { id = "org.jetbrains.kotlin.multiplatform",     version.ref = "kotlin" }
+kotlin-serialization =     { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

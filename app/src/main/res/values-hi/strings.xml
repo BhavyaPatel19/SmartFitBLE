@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">स्मार्टफिट BLE</string>
+    <string name="login">लॉगिन</string>
+    <string name="email">ईमेल</string>
+    <string name="password">पासवर्ड</string>
+    <string name="dashboard">डैशबोर्ड</string>
+    <string name="history">इतिहास</string>
+    <string name="devices">उपकरण</string>
+    <string name="profile">प्रोफ़ाइल</string>
+    <string name="welcome_back">वापसी पर स्वागत है</string>
+    <string name="login_subtitle">SmartFit के साथ अपनी सेहत आसानी से ट्रैक करें</string>
+    <string name="login_message">जारी रखने के लिए अपने SmartFit क्रेडेंशियल दर्ज करें</string>
+    <string name="username_or_email">उपयोगकर्ता नाम या ईमेल</string>
+    <string name="error_username_required">उपयोगकर्ता नाम आवश्यक है</string>
+    <string name="error_password_required">कृपया पासवर्ड दर्ज करें</string>
+    <string name="error_login_failed">अभी लॉगिन नहीं हो सका</string>
+    <string name="scan_devices">डिवाइस खोजें</string>
+    <string name="stop_scan">स्कैन रोकें</string>
+    <string name="devices_empty_state">कोई पास का SmartFit उपकरण नहीं मिला।\nखोज शुरू करने के लिए स्कैन टैप करें।</string>
+    <string name="connect">कनेक्ट करें</string>
+    <string name="connecting">कनेक्ट किया जा रहा है…</string>
+    <string name="connected">कनेक्टेड</string>
+    <string name="disconnect">डिस्कनेक्ट करें</string>
+    <string name="device_info_title">डिवाइस विवरण</string>
+    <string name="serial_number">सीरियल नंबर</string>
+    <string name="firmware_version">फर्मवेयर संस्करण</string>
+    <string name="battery_status">बैटरी स्थिति</string>
+    <string name="serial_number_value">सीरियल नंबर: %1$s</string>
+    <string name="firmware_version_value">फर्मवेयर संस्करण: %1$s</string>
+    <string name="battery_status_value">बैटरी: %1$s</string>
+    <string name="scan_failed">ब्लूटूथ स्कैन शुरू नहीं हो सका</string>
+    <string name="permissions_required">अनुमतियाँ आवश्यक</string>
+    <string name="permissions_rationale">नज़दीकी SmartFit डिवाइस खोजने के लिए ब्लूटूथ और लोकेशन अनुमति चाहिए।</string>
+    <string name="open_settings">सेटिंग खोलें</string>
+    <string name="logout">लॉग आउट</string>
+    <string name="profile_back">डैशबोर्ड पर वापस</string>
+    <string name="profile_email_label">ईमेल</string>
+    <string name="profile_username_label">उपयोगकर्ता नाम</string>
+    <string name="profile_actions_header">कार्य</string>
+    <string name="device_status_idle">स्कैन शुरू करने के लिए बटन टैप करें</string>
+    <string name="device_status_scanning">नज़दीकी डिवाइस खोजे जा रहे हैं…</string>
+    <string name="device_status_connecting">%1$s से कनेक्ट हो रहा है…</string>
+    <string name="device_status_connected">%1$s से कनेक्टेड</string>
+    <string name="ble_not_supported">यह डिवाइस ब्लूटूथ LE सपोर्ट नहीं करता</string>
+    <string name="enable_bluetooth">ब्लूटूथ चालू करें</string>
+    <string name="grant_permissions">अनुमति दें</string>
+    <string name="history_placeholder">आपका वर्कआउट इतिहास जल्द ही यहाँ दिखेगा।</string>
+    <string name="profile_logout_message">आपको लॉग आउट किया जा रहा है…</string>
+    <string name="back">वापस</string>
+    <string name="profile_preferences_header">वरीयताएँ</string>
+    <string name="toggle_dark_mode">नाइट मोड सक्षम करें</string>
+    <string name="toggle_localization">हिंदी अनुवाद का उपयोग करें</string>
+    <string name="splash_tagline">आपकी SmartFit दुनिया से जुड़ रहे हैं…</string>
+    
+    <!-- Missing Hindi translations -->
+    <string name="dashboard_greeting">नमस्ते, %1$s 👋</string>
+    <string name="dashboard_subtitle">आज का सारांश यहाँ है</string>
+    <string name="heart_rate">हृदय गति</string>
+    <string name="spo2">SpO₂</string>
+    <string name="temperature">तापमान</string>
+    <string name="spo2_placeholder">-- %</string>
+    <string name="temperature_placeholder">-- °C</string>
+    <string name="spo2_icon">🫁</string>
+    <string name="temperature_icon">🌡</string>
+    <string name="bpm">bpm</string>
+    <string name="no_data_available">कोई डेटा उपलब्ध नहीं</string>
+    <string name="add_entry">प्रविष्टि जोड़ें</string>
+    <string name="history_title">इतिहास</string>
+    <string name="history_subtitle">आपके पिछले स्वास्थ्य रिकॉर्ड</string>
+    <string name="today">आज</string>
+    <string name="yesterday">कल</string>
+    <string name="previous_7_days">पिछले 7 दिन</string>
+    <string name="older_records">पुराने रिकॉर्ड</string>
+    <string name="no_history">अभी तक कोई स्वास्थ्य रिकॉर्ड नहीं। अपनी पहली प्रविष्टि जोड़ें!</string>
+    <string name="add_entry_title">स्वास्थ्य रिकॉर्ड जोड़ें</string>
+    <string name="edit_entry_title">स्वास्थ्य रिकॉर्ड संपादित करें</string>
+    <string name="heart_rate_hint">हृदय गति (bpm)</string>
+    <string name="spo2_hint">SpO₂ (%)</string>
+    <string name="temperature_hint">तापमान (°C)</string>
+    <string name="systolic_bp">सिस्टोलिक</string>
+    <string name="diastolic_bp">डायस्टोलिक</string>
+    <string name="select_date_time">दिनांक और समय चुनें</string>
+    <string name="save">सहेजें</string>
+    <string name="update_entry">अपडेट करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="entry_saved">स्वास्थ्य रिकॉर्ड सफलतापूर्वक सहेजा गया!</string>
+    <string name="entry_updated">स्वास्थ्य रिकॉर्ड सफलतापूर्वक अपडेट किया गया!</string>
+    <string name="error_invalid_heart_rate">हृदय गति 40 और 200 bpm के बीच होनी चाहिए</string>
+    <string name="error_invalid_spo2">SpO₂ 70 और 100% के बीच होना चाहिए</string>
+    <string name="error_invalid_temperature">तापमान 35.0 और 42.0°C के बीच होना चाहिए</string>
+    <string name="graphs">ग्राफ</string>
+    <string name="heart_rate_graph">हृदय गति प्रवृत्ति</string>
+    <string name="spo2_graph">SpO₂ प्रवृत्ति</string>
+    <string name="temperature_graph">तापमान प्रवृत्ति</string>
+    <string name="no_data_for_graph">ग्राफ दिखाने के लिए पर्याप्त डेटा नहीं</string>
+    <string name="total_records">कुल रिकॉर्ड</string>
+    <string name="last_updated">अंतिम अपडेट: %1$s</string>
+    <string name="information">जानकारी</string>
+    <string name="normal_ranges">सामान्य सीमा</string>
+
+    <string name="heart_rate_normal">सामान्य हृदय गति: 60–100 bpm</string>
+    <string name="heart_rate_info">
+वयस्कों के लिए सामान्य विश्राम हृदय गति 60–100 bpm के बीच होती है। आमतौर पर, कम हृदय गति अधिक कुशल हृदय कार्य और बेहतर कार्डियोवैस्कुलर फिटनेस को दर्शाती है।
+</string>
+
+    <string name="blood_pressure_normal">सामान्य रक्तचाप: &lt;120/80 mmHg</string>
+    <string name="blood_pressure_info">
+सामान्य रक्तचाप 120/80 mmHg से कम होता है। 120–129/&lt;80 mmHg को ‘उच्च’ माना जाता है। 130–139/80–89 mmHg को ‘हाइपरटेंशन स्टेज 1’ और ≥140/≥90 mmHg को ‘स्टेज 2’ माना जाता है।
+</string>
+
+    <string name="bp_category_normal">सामान्य</string>
+    <string name="bp_category_elevated">उन्नत</string>
+    <string name="bp_category_high_stage1">उच्च (स्टेज 1)</string>
+    <string name="bp_category_high_stage2">उच्च (स्टेज 2)</string>
+    <string name="bp_category_crisis">हाइपरटेंसिव संकट</string>
+    <string name="learn_about_normal_health_ranges">सामान्य स्वास्थ्य सीमाओं के बारे में जानें</string>
+    <string name="track_your_health_trends_over_time">समय के साथ अपने स्वास्थ्य रुझानों को ट्रैक करें</string>
+    <string name="enter_heart_rate">हार्ट रेट दर्ज करें</string>
+    <string name="enter_spo2">SpO₂ (0–100%) दर्ज करें</string>
+    <string name="enter_temperature">तापमान (°C) दर्ज करें</string>
+
+
+        <string name="confirm_delete_title">एंट्री हटाएँ?</string>
+        <string name="confirm_delete_message">क्या आप वाकई इस रीडिंग को हटाना चाहते हैं?</string>
+
+        <string name="entry_deleted">एंट्री हटाई गई</string>
+        <string name="undo">पूर्ववत करें</string>
+        <string name="delete">हटाएँ</string>
+
+    <string name="error_username_empty">कृपया अपना उपयोगकर्ता नाम या ईमेल दर्ज करें</string>
+    <string name="error_password_empty">पासवर्ड खाली नहीं हो सकता</string>
+    <string name="error_password_too_short">पासवर्ड कम से कम 4 अक्षरों का होना चाहिए</string>
+    <string name="error_invalid_credentials">अमान्य उपयोगकर्ता नाम या पासवर्ड। कृपया दोबारा प्रयास करें।</string>
+    <string name="error_network">नेटवर्क त्रुटि। कृपया अपना कनेक्शन जाँचें।</string>
+
+
+
+
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.smartfit.ble.ui.dashboard.DashboardFragment"
+        android:label="@string/dashboard" />
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.smartfit.ble.ui.history.HistoryFragment"
+        android:label="@string/history" />
+
+
+    <fragment
+        android:id="@+id/devicesFragment"
+        android:name="com.smartfit.ble.ui.devices.DevicesFragment"
+        android:label="@string/devices" />
+
+    <fragment
+        android:id="@+id/informationFragment"
+        android:name="com.smartfit.ble.ui.information.InformationFragment"
+        android:label="@string/information" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.smartfit.ble.ui.profile.ProfileFragment"
+        android:label="@string/profile" />
+</navigation>

@@ -1,0 +1,45 @@
+<resources>
+    <style name="Theme.SmartFitBLE" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- PRIMARY COLORS -->
+        <item name="colorPrimary">@color/smartfit_primary</item>
+        <item name="colorPrimaryContainer">@color/smartfit_card</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <!-- SECONDARY COLORS - Using app colors, not purple -->
+        <item name="colorSecondary">@color/smartfit_primary_light</item>
+        <item name="colorSecondaryContainer">@color/smartfit_card</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+
+        <!-- BACKGROUND & SURFACE -->
+        <item name="colorSurface">@color/smartfit_card</item>
+        <item name="colorSurfaceVariant">@color/smartfit_card_elevated</item>
+        <item name="android:colorBackground">@color/smartfit_background</item>
+        <item name="colorOnSurface">@color/smartfit_text_primary</item>
+        <item name="colorOnBackground">@color/smartfit_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/smartfit_text_secondary</item>
+
+        <!-- Navigation Bar -->
+        <item name="android:navigationBarColor">@color/smartfit_background</item>
+
+        <!-- Text Input - Material 3 -->
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="editTextStyle">@style/Widget.Material3.TextInputEditText.OutlinedBox</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3</item>
+    </style>
+
+    <!-- Full Screen Dialog Theme for Add Entry -->
+    <style name="Theme.SmartFitBLE.FullScreenDialog" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/smartfit_background</item>
+        <item name="colorSurface">@color/smartfit_card</item>
+        <item name="colorOnSurface">@color/smartfit_text_primary</item>
+        <item name="android:statusBarColor">@color/smartfit_background</item>
+        <item name="android:navigationBarColor">@color/smartfit_background</item>
+    </style>
+</resources>

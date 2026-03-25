@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Main app theme -->
+    <style name="Theme.SmartFitBLE" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/smartfit_primary</item>
+        <item name="colorPrimaryContainer">@color/smartfit_card</item>
+        <item name="colorSecondary">@color/smartfit_primary</item>
+        <item name="colorSecondaryContainer">@color/smartfit_gradient_start</item>
+        <item name="colorSurface">@color/smartfit_card</item>
+        <item name="android:colorBackground">@color/smartfit_background</item>
+        <item name="android:navigationBarColor">@color/smartfit_card</item>
+
+        <item name="colorControlActivated">#1A3B82F6</item>
+        <item name="colorControlNormal">@color/smartfit_text_secondary</item>
+
+        <!-- Required for TextInputLayout (Material 3) -->
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="editTextStyle">@style/Widget.Material3.TextInputEditText.OutlinedBox</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.SmartFitBLE.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_smartfit_logo</item>
+        <item name="windowSplashScreenBackground">@drawable/bg_splash_gradient</item>
+        <item name="postSplashScreenTheme">@style/Theme.SmartFitBLE</item>
+        <item name="android:windowBackground">@drawable/bg_splash_gradient</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.SmartFitBLE.FullScreenDialog" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/splash_bg</item>
+    </style>
+
+    <style name="SmartFit.PrimaryButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/smartfit_primary</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
+    </style>
+
+
+</resources>
