@@ -91,11 +91,6 @@ class SessionManager(private val context: Context) {
 
     /** GOOGLE LOGIN */
     suspend fun saveGoogleSession(session: AuthSession) {
-        saveFirebaseSession(session)
-    }
-
-    /** FIREBASE LOGIN (EMAIL / GOOGLE) */
-    suspend fun saveFirebaseSession(session: AuthSession) {
         dataStore.edit { prefs ->
             prefs[USER_ID] = session.id.toString()
             prefs[FIREBASE_UID] = session.firebaseUid
@@ -106,7 +101,7 @@ class SessionManager(private val context: Context) {
             prefs[IMAGE_URL] = session.imageUrl
             prefs[ACCESS_TOKEN] = session.accessToken
             prefs[REFRESH_TOKEN] = session.refreshToken
-            prefs[LOGIN_TYPE] = session.loginType.name
+            prefs[LOGIN_TYPE] = LoginType.GOOGLE.name
         }
     }
 

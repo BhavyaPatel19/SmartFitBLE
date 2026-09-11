@@ -2,41 +2,41 @@
 <resources>
     <color name="splash_bg">#FFFFFF</color>
     
-    <!-- Premium Vibrant Brand (Electric Indigo) -->
-    <color name="smartfit_primary">#635BFF</color>
-    <color name="smartfit_primary_dark">#3D35FF</color>
-    <color name="smartfit_primary_light">#7C74FF</color>
+    <!-- Primary Colors - Modern Blue Gradient -->
+    <color name="smartfit_primary">#4A90E2</color>
+    <color name="smartfit_primary_dark">#2C5F8F</color>
+    <color name="smartfit_primary_light">#6BA3E8</color>
     
-    <!-- Background Colors (premium, slightly tinted) -->
-    <color name="smartfit_background">#F6F7FF</color>
+    <!-- Background Colors -->
+    <color name="smartfit_background">#F5F7FA</color>
     <color name="smartfit_card">#FFFFFF</color>
     <color name="smartfit_card_elevated">#FFFFFF</color>
     
     <!-- Text Colors -->
-    <color name="smartfit_grey">#667085</color>
-    <color name="smartfit_grey_light">#98A2B3</color>
-    <color name="smartfit_text_primary">#101828</color>
-    <color name="smartfit_text_secondary">#667085</color>
+    <color name="smartfit_grey">#6B7583</color>
+    <color name="smartfit_grey_light">#9CA3AF</color>
+    <color name="smartfit_text_primary">#1F2937</color>
+    <color name="smartfit_text_secondary">#6B7583</color>
     
     <!-- Status Colors -->
-    <color name="smartfit_success">#12B76A</color>
-    <color name="smartfit_warning">#F79009</color>
-    <color name="error_background">#F04438</color>
-    <color name="success_background">#12B76A</color>
+    <color name="smartfit_success">#10B981</color>
+    <color name="smartfit_warning">#F59E0B</color>
+    <color name="error_background">#EF4444</color>
+    <color name="success_background">#10B981</color>
     
-    <!-- Gradient Colors (vibrant premium) -->
-    <color name="smartfit_gradient_start">#635BFF</color>
-    <color name="smartfit_gradient_mid">#00D2FF</color>
-    <color name="smartfit_gradient_end">#FF3DCE</color>
+    <!-- Gradient Colors -->
+    <color name="smartfit_gradient_start">#4A90E2</color>
+    <color name="smartfit_gradient_end">#7B66FF</color>
+    <color name="smartfit_gradient_mid">#5F7CE8</color>
     
     <!-- Accent Colors -->
-    <color name="smartfit_diastolic_normal">#12B76A</color>
-    <color name="smartfit_accent_purple">#635BFF</color>
-    <color name="smartfit_accent_teal">#00D2FF</color>
+    <color name="smartfit_diastolic_normal">#10B981</color>
+    <color name="smartfit_accent_purple">#7B66FF</color>
+    <color name="smartfit_accent_teal">#14B8A6</color>
     
     <!-- Divider -->
     <color name="smartfit_divider">#E5E7EB</color>
 
-    <color name="smartfit_green">#12B76A</color>
-    <color name="smartfit_orange">#F79009</color>
+    <color name="smartfit_green">#2ECC71</color>
+    <color name="smartfit_orange">#F39C12</color>
 </resources>

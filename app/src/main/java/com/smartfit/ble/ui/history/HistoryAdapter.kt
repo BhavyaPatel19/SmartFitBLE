@@ -70,23 +70,18 @@ class HistoryAdapter(
             val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
-            val patient = buildString {
-                append(record.patientName.ifBlank { "Patient" })
-                record.patientAge?.let { append(" • ").append(it).append("y") }
-            }
-
-            binding.tvPatient.text = patient
             binding.tvDate.text = dateFormat.format(record.date)
             binding.tvTime.text = timeFormat.format(record.date)
             binding.tvHR.text = "${record.heartRate} bpm"
-            binding.tvSpo2.text = record.spo2Display
-            binding.tvTemperature.text = record.temperatureDisplay
+            binding.tvBP.text = record.bloodPressure
 
             val context = binding.root.context
+
             val green = context.getColor(R.color.smartfit_green)
             val orange = context.getColor(R.color.smartfit_orange)
             val red = context.getColor(R.color.error_background)
             val textDefault = context.getColor(R.color.smartfit_primary_dark)
+
 
             val hrColor = when {
                 record.heartRate in 60..100 -> green
@@ -94,21 +89,18 @@ class HistoryAdapter(
             }
             binding.tvHR.setTextColor(hrColor)
 
-            val spo2Color = when (record.spo2) {
-                null -> textDefault
-                in 95..100 -> green
-                in 90..94 -> orange
-                else -> red
-            }
-            binding.tvSpo2.setTextColor(spo2Color)
 
-            val tempColor = when (record.temperature) {
-                null -> textDefault
-                in 36.1f..37.2f -> green
-                in 35.0f..36.0f, in 37.3f..38.0f -> orange
-                else -> red
+            val sbp = record.systolicBP
+            val dbp = record.diastolicBP
+
+            val bpColor = when {
+                sbp < 120 && dbp < 80 -> green
+                sbp in 120..129 && dbp < 80 -> orange
+                sbp in 130..139 || dbp in 80..89 -> red
+                sbp >= 140 || dbp >= 90 -> red
+                else -> textDefault
             }
-            binding.tvTemperature.setTextColor(tempColor)
+            binding.tvBP.setTextColor(bpColor)
 
             binding.root.setOnClickListener { onRecordClick(record) }
         }

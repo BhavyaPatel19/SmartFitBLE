@@ -72,17 +72,16 @@ class DashboardFragment : Fragment() {
     private fun updateDashboard(record: com.smartfit.ble.data.model.HealthRecord?) {
         if (record != null) {
             binding.tvHeartRate.text = "${record.heartRate} ${getString(R.string.bpm)}"
-            binding.tvSpo2.text = record.spo2Display
-            binding.tvTemperature.text = record.temperatureDisplay
+            binding.tvBloodPressure.text = record.bloodPressure
             binding.cardVitals.visibility = View.VISIBLE
-
+            
+            // Show timestamp
             val formatter = java.text.SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", java.util.Locale.getDefault())
             binding.tvDataTimestamp.text = getString(R.string.last_updated, formatter.format(record.timestamp))
             binding.tvDataTimestamp.visibility = View.VISIBLE
         } else {
             binding.tvHeartRate.text = "-- ${getString(R.string.bpm)}"
-            binding.tvSpo2.text = getString(R.string.spo2_placeholder)
-            binding.tvTemperature.text = getString(R.string.temperature_placeholder)
+            binding.tvBloodPressure.text = "--/--"
             binding.cardVitals.visibility = View.VISIBLE
             binding.tvDataTimestamp.visibility = View.GONE
         }

@@ -3,9 +3,14 @@ package com.smartfit.ble.ui.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.smartfit.ble.R
 import com.smartfit.ble.SmartFitApp
 import com.smartfit.ble.data.AuthSession
@@ -16,6 +21,7 @@ import com.smartfit.ble.data.model.UserProfile
 import com.smartfit.ble.databinding.ActivityLoginBinding
 import com.smartfit.ble.ui.main.MainActivity
 import com.smartfit.ble.util.ToastUtil
+import com.smartfit.shared.auth.AuthClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -33,65 +39,75 @@ class LoginActivity : ComponentActivity() {
         FirebaseUserDataSource()
     }
 
+    private val authClient by lazy {
+        AuthClient()
+    }
+
     // ✅ REQUIRED: access HealthRepository to clear local Room data
     private val healthRepository by lazy {
         (application as SmartFitApp).appContainer.healthRepository
     }
 
+    /* ---------------- GOOGLE SIGN-IN ---------------- */
+
+    private val googleClient by lazy {
+        GoogleSignIn.getClient(
+            this,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.google_web_client_id))
+                .requestEmail()
+                .build()
+        )
+    }
+
+    private val googleLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                runCatching { task.result }
+                    .onSuccess { account ->
+                        try {
+                            firebaseLogin(account.idToken!!)
+                        } catch (e: NullPointerException) {
+                            ToastUtil.showError(this, "Google sign-in failed: missing token")
+                        }
+                    }
+                    .onFailure {
+                        ToastUtil.showError(this, "Google sign-in failed")
+                    }
+            }
+        }
+
     /* ---------------- LIFECYCLE ---------------- */
-
-    private enum class AuthMode { LOGIN, SIGNUP }
-    private var authMode: AuthMode = AuthMode.LOGIN
-
-    private val doctorEmail = "doctor@clinic.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Start in login mode (users can choose to create account)
-        setAuthMode(AuthMode.LOGIN)
+        binding.googleSignInButton.setSize(SignInButton.SIZE_WIDE)
 
         setupClickListeners()
     }
 
     private fun setupClickListeners() {
-        binding.loginButton.setOnClickListener {
-            when (authMode) {
-                AuthMode.LOGIN -> attemptEmailLogin()
-                AuthMode.SIGNUP -> attemptEmailSignUp()
+        binding.loginButton.setOnClickListener { attemptApiLogin() }
+        binding.googleSignInButton.setOnClickListener {
+            // 🔥 Force Google to forget previous account
+            googleClient.signOut().addOnCompleteListener {
+                googleLauncher.launch(googleClient.signInIntent)
             }
         }
 
-        binding.tvToggleAuthMode.setOnClickListener {
-            setAuthMode(if (authMode == AuthMode.LOGIN) AuthMode.SIGNUP else AuthMode.LOGIN)
-        }
-
     }
 
-    private fun setAuthMode(mode: AuthMode) {
-        authMode = mode
-        val isSignUp = mode == AuthMode.SIGNUP
+    /* ---------------- API LOGIN ---------------- */
 
-        binding.formTitle.text = getString(if (isSignUp) R.string.create_account else R.string.login)
-        binding.formSubtitle.text = getString(if (isSignUp) R.string.signup_message else R.string.login_message)
-
-        binding.nameInputLayout.isVisible = isSignUp
-        binding.nameEditText.isEnabled = isSignUp
-        binding.nameEditText.text?.clear()
-
-        binding.loginButton.text = getString(if (isSignUp) R.string.create_account else R.string.login)
-        binding.tvToggleAuthMode.text = getString(if (isSignUp) R.string.already_have_account else R.string.create_account)
-    }
-
-    /* ---------------- EMAIL/PASSWORD LOGIN ---------------- */
-
-    private fun attemptEmailLogin() {
-        val email = binding.emailEditText.text?.toString()?.trim().orEmpty()
+    private fun attemptApiLogin() {
+        val username = binding.emailEditText.text?.toString()?.trim().orEmpty()
         val password = binding.passwordEditText.text?.toString()?.trim().orEmpty()
 
-        if (email.isBlank() || password.length < 6) {
+        if (username.isBlank() || password.length < 4) {
             ToastUtil.showError(this, getString(R.string.error_invalid_credentials))
             return
         }
@@ -99,124 +115,85 @@ class LoginActivity : ComponentActivity() {
         lifecycleScope.launch {
             setLoading(true)
             try {
-                val auth = FirebaseAuth.getInstance()
-                val firebaseUser = auth
-                    .signInWithEmailAndPassword(email, password)
+                val response = withContext(Dispatchers.IO) {
+                    authClient.login(username, password)
+                }
+
+                // Save API session locally
+                sessionManager.saveSession(response)
+
+                // 🔥 CRITICAL: Authenticate with Firebase
+                FirebaseAuth.getInstance()
+                    .signInAnonymously()
                     .await()
-                    .user ?: throw IllegalStateException("Firebase user null")
-
-                // Create / update Firebase profile
-                val firebaseUid = firebaseUser.uid
-
-                val emailValue = firebaseUser.email.orEmpty()
-                val fallbackDisplayName = emailValue.substringBefore("@").ifBlank { "User" }
-                val remoteDisplayName = firebaseUserDataSource.getDisplayName(firebaseUid)?.trim().orEmpty()
-
-                val displayName = when {
-                    emailValue.equals(doctorEmail, ignoreCase = true) -> "Doctor"
-                    remoteDisplayName.isBlank() -> fallbackDisplayName
-                    remoteDisplayName.equals("Doctor", ignoreCase = true) -> fallbackDisplayName
-                    else -> remoteDisplayName
-                }
-
-                // If old profile had "Doctor" for non-doctor user, fix it.
-                if (!emailValue.equals(doctorEmail, ignoreCase = true) &&
-                    remoteDisplayName.equals("Doctor", ignoreCase = true)
-                ) {
-                    firebaseUserDataSource.setDisplayName(firebaseUid, displayName)
-                }
-
-                firebaseUserDataSource.createUserIfNotExists(
-                    UserProfile(
-                        uid = firebaseUid,
-                        email = firebaseUser.email.orEmpty(),
-                        displayName = displayName,
-                        loginType = LoginType.EMAIL.name
-                    )
-                )
-
-                val firstName = displayName.substringBefore(" ").trim().ifBlank { displayName }
-                val lastName = displayName.substringAfter(" ", "").trim()
-
-                // Save Firebase session
-                sessionManager.saveFirebaseSession(
-                    AuthSession(
-                        id = firebaseUser.uid.hashCode(),
-                        firebaseUid = firebaseUser.uid,
-                        username = firebaseUser.email.orEmpty(),
-                        firstName = firstName,
-                        lastName = lastName,
-                        email = firebaseUser.email.orEmpty(),
-                        imageUrl = firebaseUser.photoUrl?.toString().orEmpty(),
-                        accessToken = "EMAIL",
-                        refreshToken = "EMAIL",
-                        loginType = LoginType.EMAIL
-                    )
-                )
 
                 healthRepository.clearLocalData()
 
                 navigateToMain()
+
             } catch (e: Exception) {
-                ToastUtil.showError(this@LoginActivity, getString(R.string.error_invalid_credentials))
+                ToastUtil.showError(
+                    this@LoginActivity,
+                    getString(R.string.error_invalid_credentials)
+                )
             } finally {
                 setLoading(false)
             }
         }
     }
 
-    private fun attemptEmailSignUp() {
-        val fullName = binding.nameEditText.text?.toString()?.trim().orEmpty()
-        val email = binding.emailEditText.text?.toString()?.trim().orEmpty()
-        val password = binding.passwordEditText.text?.toString()?.trim().orEmpty()
+    /* ---------------- GOOGLE LOGIN ---------------- */
 
-        if (fullName.isBlank() || email.isBlank() || password.length < 6) {
-            ToastUtil.showError(this, getString(R.string.error_invalid_credentials))
-            return
-        }
-
+    private fun firebaseLogin(idToken: String) {
         lifecycleScope.launch {
             setLoading(true)
             try {
-                val auth = FirebaseAuth.getInstance()
-                val firebaseUser = auth
-                    .createUserWithEmailAndPassword(email, password)
+                val credential = GoogleAuthProvider.getCredential(idToken, null)
+                val firebaseUser = FirebaseAuth.getInstance()
+                    .signInWithCredential(credential)
                     .await()
                     .user ?: throw IllegalStateException("Firebase user null")
 
+                // Create / update Firebase profile
                 val firebaseUid = firebaseUser.uid
 
                 firebaseUserDataSource.createUserIfNotExists(
                     UserProfile(
                         uid = firebaseUid,
                         email = firebaseUser.email.orEmpty(),
-                        displayName = fullName,
-                        loginType = LoginType.EMAIL.name
+                        displayName = firebaseUser.displayName ?: "User",
+                        loginType = LoginType.GOOGLE.name
                     )
                 )
 
-                val firstName = fullName.substringBefore(" ").trim().ifBlank { "User" }
-                val lastName = fullName.substringAfter(" ", "").trim()
 
-                sessionManager.saveFirebaseSession(
+
+                // Save Google session
+                sessionManager.saveGoogleSession(
                     AuthSession(
-                        id = firebaseUid.hashCode(),
-                        firebaseUid = firebaseUid,
+                        id = firebaseUser.uid.hashCode(),
+                        firebaseUid = firebaseUser.uid,
                         username = firebaseUser.email.orEmpty(),
-                        firstName = firstName,
-                        lastName = lastName,
+                        firstName = firebaseUser.displayName
+                            ?.substringBefore(" ")
+                            .orEmpty(),
+                        lastName = firebaseUser.displayName
+                            ?.substringAfter(" ", "")
+                            .orEmpty(),
                         email = firebaseUser.email.orEmpty(),
-                        imageUrl = "",
-                        accessToken = "EMAIL",
-                        refreshToken = "EMAIL",
-                        loginType = LoginType.EMAIL
+                        imageUrl = firebaseUser.photoUrl?.toString().orEmpty(),
+                        accessToken = "GOOGLE",
+                        refreshToken = "GOOGLE",
+                        loginType = LoginType.GOOGLE
                     )
                 )
+
 
                 healthRepository.clearLocalData()
+
                 navigateToMain()
             } catch (e: Exception) {
-                ToastUtil.showError(this@LoginActivity, getString(R.string.error_login_failed))
+                ToastUtil.showError(this@LoginActivity, "Google login failed")
             } finally {
                 setLoading(false)
             }
@@ -228,6 +205,7 @@ class LoginActivity : ComponentActivity() {
     private fun setLoading(loading: Boolean) {
         binding.progressIndicator.isVisible = loading
         binding.loginButton.isEnabled = !loading
+        binding.googleSignInButton.isEnabled = !loading
     }
 
     private fun navigateToMain() {

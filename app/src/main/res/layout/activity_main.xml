@@ -47,9 +47,8 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:itemActiveIndicatorStyle="@style/NoActiveIndicator"
-        app:itemIconTint="@color/bottom_nav_color_selector"
+        app:itemIconTint="@null"
         app:itemTextColor="@color/bottom_nav_color_selector"
-        app:itemRippleColor="@color/smartfit_divider"
         app:menu="@menu/menu_bottom" />
 
 

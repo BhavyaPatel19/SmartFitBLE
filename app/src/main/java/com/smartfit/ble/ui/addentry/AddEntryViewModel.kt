@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class AddEntryViewModel(private val repository: HealthRepository) : ViewModel() {
 
+
     private val _isSaving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
 
@@ -21,15 +22,17 @@ class AddEntryViewModel(private val repository: HealthRepository) : ViewModel() 
     private val _editingRecord = MutableStateFlow<HealthRecord?>(null)
     val editingRecord: StateFlow<HealthRecord?> = _editingRecord.asStateFlow()
 
+
     private val _warningMessage = MutableStateFlow<String?>(null)
     val warningMessage: StateFlow<String?> = _warningMessage.asStateFlow()
 
     private val _showConfirmationDialog = MutableStateFlow(false)
     val showConfirmationDialog: StateFlow<Boolean> = _showConfirmationDialog.asStateFlow()
 
+    // Normal ranges for "warning" (tighter than hard validation)
     private val NORMAL_HR_RANGE = 60..100
-    private val NORMAL_SPO2_RANGE = 95..100
-    private val NORMAL_TEMP_RANGE = 36.1f..37.2f
+    private val NORMAL_SBP_RANGE = 90..120
+    private val NORMAL_DBP_RANGE = 60..80
 
     fun loadRecord(recordId: Long) {
         viewModelScope.launch {
@@ -37,21 +40,19 @@ class AddEntryViewModel(private val repository: HealthRepository) : ViewModel() 
         }
     }
 
+
     fun submitRecord(
-        patientName: String,
-        patientAge: Int?,
         heartRate: Int,
-        spo2: Int,
-        temperature: Float,
+        systolicBP: Int,
+        diastolicBP: Int,
         timestamp: Long = System.currentTimeMillis(),
         forceSave: Boolean = false
     ) {
-        if (!forceSave && !checkForWarnings(heartRate, spo2, temperature)) {
+        // If not forced, first check if values are abnormal
+        if (!forceSave && !checkForWarnings(heartRate, systolicBP, diastolicBP)) {
+            // Abnormal values detected; a confirmation dialog will be shown by the UI
             return
         }
-
-        val normalizedPatientName = patientName.trim()
-        val patientNameLower = normalizedPatientName.lowercase()
 
         viewModelScope.launch {
             _isSaving.value = true
@@ -61,29 +62,24 @@ class AddEntryViewModel(private val repository: HealthRepository) : ViewModel() 
                 if (existing == null) {
                     repository.insertRecord(
                         HealthRecord(
-                            patientName = normalizedPatientName,
-                            patientNameLower = patientNameLower,
-                            patientAge = patientAge,
                             heartRate = heartRate,
-                            spo2 = spo2,
-                            temperature = temperature,
+                            systolicBP = systolicBP,
+                            diastolicBP = diastolicBP,
                             timestamp = timestamp
                         )
                     )
                 } else {
                     repository.updateRecord(
                         existing.copy(
-                            patientName = normalizedPatientName,
-                            patientNameLower = patientNameLower,
-                            patientAge = patientAge,
                             heartRate = heartRate,
-                            spo2 = spo2,
-                            temperature = temperature,
+                            systolicBP = systolicBP,
+                            diastolicBP = diastolicBP,
                             timestamp = timestamp
                         )
                     )
                 }
                 _saveSuccess.value = true
+                // Clear warning state after a successful save
                 _warningMessage.value = null
             } finally {
                 _isSaving.value = false
@@ -93,19 +89,19 @@ class AddEntryViewModel(private val repository: HealthRepository) : ViewModel() 
 
     private fun checkForWarnings(
         heartRate: Int,
-        spo2: Int,
-        temperature: Float
+        systolicBP: Int,
+        diastolicBP: Int
     ): Boolean {
         val warnings = mutableListOf<String>()
 
         if (heartRate !in NORMAL_HR_RANGE) {
             warnings += "Heart rate is outside the normal range (${NORMAL_HR_RANGE.first}-${NORMAL_HR_RANGE.last} bpm)."
         }
-        if (spo2 !in NORMAL_SPO2_RANGE) {
-            warnings += "SpO₂ is outside the normal range (${NORMAL_SPO2_RANGE.first}-${NORMAL_SPO2_RANGE.last}%)."
+        if (systolicBP !in NORMAL_SBP_RANGE) {
+            warnings += "Systolic BP is outside the normal range (${NORMAL_SBP_RANGE.first}-${NORMAL_SBP_RANGE.last} mmHg)."
         }
-        if (temperature !in NORMAL_TEMP_RANGE) {
-            warnings += "Temperature is outside the normal range (${NORMAL_TEMP_RANGE.start}-${NORMAL_TEMP_RANGE.endInclusive}°C)."
+        if (diastolicBP !in NORMAL_DBP_RANGE) {
+            warnings += "Diastolic BP is outside the normal range (${NORMAL_DBP_RANGE.first}-${NORMAL_DBP_RANGE.last} mmHg)."
         }
 
         return if (warnings.isNotEmpty()) {

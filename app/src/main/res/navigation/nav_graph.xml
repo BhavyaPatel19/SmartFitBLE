@@ -19,7 +19,12 @@
         android:id="@+id/devicesFragment"
         android:name="com.smartfit.ble.ui.devices.DevicesFragment"
         android:label="@string/devices" />
-
+    
+    <fragment
+        android:id="@+id/graphsFragment"
+        android:name="com.smartfit.ble.ui.graphs.GraphsFragment"
+        android:label="@string/graphs" />
+    
     <fragment
         android:id="@+id/informationFragment"
         android:name="com.smartfit.ble.ui.information.InformationFragment"

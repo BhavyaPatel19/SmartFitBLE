@@ -48,25 +48,6 @@
                     android:alpha="0.85" />
             </LinearLayout>
 
-            <!-- SEARCH -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search_patient_hint"
-                android:layout_marginBottom="12dp"
-                app:endIconMode="clear_text">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearchPatient"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- HISTORY LIST -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvHistory"

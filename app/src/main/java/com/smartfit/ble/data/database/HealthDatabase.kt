@@ -8,7 +8,7 @@ import com.smartfit.ble.data.model.HealthRecord
 
 @Database(
     entities = [HealthRecord::class],
-    version = 3,
+    version = 1,
     exportSchema = false
 )
 abstract class HealthDatabase : RoomDatabase() {

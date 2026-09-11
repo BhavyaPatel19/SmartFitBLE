@@ -332,16 +332,16 @@ class BleRepository(
                     // 1) emit to UI
                     _bpMeasurements.emit(bp)
 
-                    // 2) build record (use pulse as heartRate; spo2/temp from device when integrated)
-                    val hr = bp.pulse ?: 0
+                    // 2) build record once
+                    val hr = bp.pulse ?: 0   // use pulse as heartRate
                     val record = HealthRecord(
                         heartRate = hr,
-                        spo2 = null,
-                        temperature = null,
+                        systolicBP = bp.systolic,
+                        diastolicBP = bp.diastolic,
                         timestamp = bp.timestamp
                     )
 
-                    // 3) save locally → dashboard, history update
+                    // 3) save locally → dashboard, history, graphs all update
                     healthRepository.insertRecord(record)
 
                     // 4) upload to Firebase when a user is logged in

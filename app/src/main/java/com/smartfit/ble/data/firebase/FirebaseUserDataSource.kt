@@ -3,7 +3,6 @@ package com.smartfit.ble.data.firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.smartfit.ble.data.model.UserProfile
-import kotlinx.coroutines.tasks.await
 
 class FirebaseUserDataSource {
 
@@ -24,27 +23,6 @@ class FirebaseUserDataSource {
                 ),
                 SetOptions.merge()
             )
-    }
-
-    suspend fun getDisplayName(uid: String): String? {
-        val doc = firestore.collection("users").document(uid).get().await()
-        val profile = doc.get("profile") as? Map<*, *> ?: return null
-        return profile["displayName"] as? String
-    }
-
-    suspend fun setDisplayName(uid: String, displayName: String) {
-        firestore
-            .collection("users")
-            .document(uid)
-            .set(
-                mapOf(
-                    "profile" to mapOf(
-                        "displayName" to displayName
-                    )
-                ),
-                SetOptions.merge()
-            )
-            .await()
     }
 }
 

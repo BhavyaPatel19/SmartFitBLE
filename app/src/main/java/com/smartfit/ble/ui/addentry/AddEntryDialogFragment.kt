@@ -94,11 +94,9 @@ class AddEntryDialogFragment : DialogFragment() {
             viewModel.editingRecord.collectLatest { record ->
                 if (record != null && !hasPrefilledFields) {
                     hasPrefilledFields = true
-                    binding.etPatientName.setText(record.patientName)
-                    binding.etPatientAge.setText(record.patientAge?.toString() ?: "")
                     binding.etHeartRate.setText(record.heartRate.toString())
-                    binding.etSpo2.setText(record.spo2?.toString() ?: "")
-                    binding.etTemperature.setText(record.temperature?.let { "%.1f".format(it) } ?: "")
+                    binding.etSystolicBP.setText(record.systolicBP.toString())
+                    binding.etDiastolicBP.setText(record.diastolicBP.toString())
                     selectedTimestamp = record.timestamp
                     updateDateTimeDisplay()
                     updateDialogTitle()
@@ -117,18 +115,14 @@ class AddEntryDialogFragment : DialogFragment() {
                         .setTitle("Warning")
                         .setMessage(message)
                         .setPositiveButton(getString(R.string.save)) { _, _ ->
-                            val patientName = binding.etPatientName.text.toString().trim()
-                            val patientAge = binding.etPatientAge.text.toString().trim().toIntOrNull()
                             val heartRate = binding.etHeartRate.text.toString().trim().toInt()
-                            val spo2 = binding.etSpo2.text.toString().trim().toInt()
-                            val temperature = binding.etTemperature.text.toString().trim().toFloat()
+                            val systolic = binding.etSystolicBP.text.toString().trim().toInt()
+                            val diastolic = binding.etDiastolicBP.text.toString().trim().toInt()
 
                             viewModel.submitRecord(
-                                patientName = patientName,
-                                patientAge = patientAge,
                                 heartRate = heartRate,
-                                spo2 = spo2,
-                                temperature = temperature,
+                                systolicBP = systolic,
+                                diastolicBP = diastolic,
                                 timestamp = selectedTimestamp,
                                 forceSave = true
                             )
@@ -141,53 +135,27 @@ class AddEntryDialogFragment : DialogFragment() {
     }
 
     private fun saveEntry() {
-        val patientName = binding.etPatientName.text?.toString()?.trim().orEmpty()
-        val patientAgeStr = binding.etPatientAge.text?.toString()?.trim().orEmpty()
         val hr = binding.etHeartRate.text?.toString()?.trim().orEmpty()
-        val spo2Str = binding.etSpo2.text?.toString()?.trim().orEmpty()
-        val tempStr = binding.etTemperature.text?.toString()?.trim().orEmpty()
+        val sys = binding.etSystolicBP.text?.toString()?.trim().orEmpty()
+        val dia = binding.etDiastolicBP.text?.toString()?.trim().orEmpty()
 
-        if (!validateInput(patientName, patientAgeStr, hr, spo2Str, tempStr)) return
+        if (!validateInput(hr, sys, dia)) return
 
         if (selectedTimestamp > System.currentTimeMillis()) {
             ToastUtil.showError(requireContext(), "Cannot select a future date or time")
             return
         }
 
-        val patientAge = patientAgeStr.toIntOrNull()
         viewModel.submitRecord(
-            patientName = patientName,
-            patientAge = patientAge,
             heartRate = hr.toInt(),
-            spo2 = spo2Str.toInt(),
-            temperature = tempStr.toFloat(),
+            systolicBP = sys.toInt(),
+            diastolicBP = dia.toInt(),
             timestamp = selectedTimestamp
         )
     }
 
-    private fun validateInput(
-        patientName: String,
-        patientAgeStr: String,
-        hr: String,
-        spo2Str: String,
-        tempStr: String
-    ): Boolean {
+    private fun validateInput(hr: String, sys: String, dia: String): Boolean {
         var isValid = true
-
-        if (patientName.isBlank()) {
-            binding.etPatientName.error = getString(R.string.error_patient_name_required)
-            isValid = false
-        } else {
-            binding.etPatientName.error = null
-        }
-
-        val age = patientAgeStr.toIntOrNull()
-        if (patientAgeStr.isNotBlank() && (age == null || age !in 0..130)) {
-            binding.etPatientAge.error = getString(R.string.error_patient_age_invalid)
-            isValid = false
-        } else {
-            binding.etPatientAge.error = null
-        }
 
         if (hr.isBlank()) {
             binding.etHeartRate.error = getString(R.string.error_invalid_heart_rate)
@@ -200,26 +168,35 @@ class AddEntryDialogFragment : DialogFragment() {
             } else binding.etHeartRate.error = null
         }
 
-        if (spo2Str.isBlank()) {
-            binding.etSpo2.error = getString(R.string.error_invalid_spo2)
+        if (sys.isBlank()) {
+            binding.etSystolicBP.error = getString(R.string.error_invalid_systolic)
             isValid = false
         } else {
-            val value = spo2Str.toIntOrNull()
-            if (value == null || value < 70 || value > 100) {
-                binding.etSpo2.error = getString(R.string.error_invalid_spo2)
+            val value = sys.toIntOrNull()
+            if (value == null || value < 70 || value > 250) {
+                binding.etSystolicBP.error = getString(R.string.error_invalid_systolic)
                 isValid = false
-            } else binding.etSpo2.error = null
+            } else binding.etSystolicBP.error = null
         }
 
-        if (tempStr.isBlank()) {
-            binding.etTemperature.error = getString(R.string.error_invalid_temperature)
+        if (dia.isBlank()) {
+            binding.etDiastolicBP.error = getString(R.string.error_invalid_diastolic)
             isValid = false
         } else {
-            val value = tempStr.toFloatOrNull()
-            if (value == null || value < 35f || value > 42f) {
-                binding.etTemperature.error = getString(R.string.error_invalid_temperature)
+            val value = dia.toIntOrNull()
+            if (value == null || value < 40 || value > 150) {
+                binding.etDiastolicBP.error = getString(R.string.error_invalid_diastolic)
                 isValid = false
-            } else binding.etTemperature.error = null
+            } else binding.etDiastolicBP.error = null
+        }
+
+        if (isValid) {
+            val s = sys.toInt()
+            val d = dia.toInt()
+            if (s <= d) {
+                binding.etSystolicBP.error = getString(R.string.error_invalid_bp_range)
+                isValid = false
+            }
         }
 
         return isValid

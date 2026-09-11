@@ -64,7 +64,7 @@ class SplashActivity : ComponentActivity() {
                 }
             }
 
-            LoginType.GOOGLE, LoginType.EMAIL -> {
+            LoginType.GOOGLE -> {
                 val currentUser = FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
                     sessionManager.clearSession()

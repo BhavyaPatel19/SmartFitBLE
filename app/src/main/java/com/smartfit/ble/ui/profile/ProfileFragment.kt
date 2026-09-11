@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
-import com.google.firebase.auth.FirebaseAuth
 import com.smartfit.ble.R
 import com.smartfit.ble.data.SessionManager
 import com.smartfit.ble.data.UserPreferences
@@ -114,7 +113,6 @@ class ProfileFragment : Fragment() {
         binding.btnLogout.isEnabled = false
         viewLifecycleOwner.lifecycleScope.launch {
             sessionManager.clearSession()
-            FirebaseAuth.getInstance().signOut()
             val intent = Intent(requireContext(), LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             }

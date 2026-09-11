@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.dashboardFragment,
                 R.id.historyFragment,
                 R.id.devicesFragment,
+                R.id.graphsFragment,
                 R.id.informationFragment
             )
         )

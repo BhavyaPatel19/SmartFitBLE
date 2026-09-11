@@ -143,13 +143,14 @@
                         android:background="@color/smartfit_divider"
                         android:alpha="0.3"/>
 
-                    <!-- SpO2 ROW -->
+                    <!-- BLOOD PRESSURE ROW -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
+                        <!-- Icon bubble -->
                         <FrameLayout
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -158,12 +159,13 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="@string/spo2_icon"
+                                android:text="@string/bp_dash"
                                 android:gravity="center"
                                 android:textSize="18sp"
                                 android:textColor="@android:color/white"/>
                         </FrameLayout>
 
+                        <!-- Texts -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -174,71 +176,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/spo2"
+                                android:text="@string/blood_pressure"
                                 android:textSize="13sp"
                                 android:textColor="@color/smartfit_text_secondary"/>
 
                             <TextView
-                                android:id="@+id/tvSpo2"
+                                android:id="@+id/tvBloodPressure"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/spo2_placeholder"
-                                android:textSize="28sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/smartfit_primary"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!-- Divider -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="18dp"
-                        android:background="@color/smartfit_divider"
-                        android:alpha="0.3"/>
-
-                    <!-- TEMPERATURE ROW -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <FrameLayout
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_outline_button">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="@string/temperature_icon"
-                                android:gravity="center"
-                                android:textSize="18sp"
-                                android:textColor="@android:color/white"/>
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="12dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/temperature"
-                                android:textSize="13sp"
-                                android:textColor="@color/smartfit_text_secondary"/>
-
-                            <TextView
-                                android:id="@+id/tvTemperature"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/temperature_placeholder"
+                                android:text="@string/dash_dash"
                                 android:textSize="28sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/smartfit_primary"

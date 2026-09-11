@@ -1,8 +1,6 @@
 package com.smartfit.ble.ui.history
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,8 +31,6 @@ class HistoryFragment : Fragment() {
     }
 
     private lateinit var historyAdapter: HistoryAdapter
-    private var latestRecords: List<HealthRecord> = emptyList()
-    private var currentQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,19 +45,7 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupSwipeToDelete()
-        setupSearch()
         observeViewModel()
-    }
-
-    private fun setupSearch() {
-        binding.etSearchPatient.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-            override fun afterTextChanged(s: Editable?) {
-                currentQuery = s?.toString().orEmpty()
-                render()
-            }
-        })
     }
 
     private fun setupRecyclerView() {
@@ -147,30 +131,19 @@ class HistoryFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.records.collectLatest { records ->
-                latestRecords = records
-                // Delay render to allow Snackbar to appear
-                binding.rvHistory.postDelayed({ render() }, 12)
-            }
-        }
-    }
 
-    private fun render() {
-        val query = currentQuery.trim().lowercase()
-        val filtered = if (query.isBlank()) {
-            latestRecords
-        } else {
-            latestRecords.filter {
-                it.patientNameLower.contains(query) || it.patientName.lowercase().contains(query)
+                // Delay submitList to allow Snackbar to appear
+                binding.rvHistory.postDelayed({
+                    if (records.isEmpty()) {
+                        binding.rvHistory.visibility = View.GONE
+                        binding.tvEmptyState.visibility = View.VISIBLE
+                    } else {
+                        binding.rvHistory.visibility = View.VISIBLE
+                        binding.tvEmptyState.visibility = View.GONE
+                        historyAdapter.submitList(groupRecordsByDate(records))
+                    }
+                }, 12) //
             }
-        }
-
-        if (filtered.isEmpty()) {
-            binding.rvHistory.visibility = View.GONE
-            binding.tvEmptyState.visibility = View.VISIBLE
-        } else {
-            binding.rvHistory.visibility = View.VISIBLE
-            binding.tvEmptyState.visibility = View.GONE
-            historyAdapter.submitList(groupRecordsByDate(filtered))
         }
     }
 
