@@ -58,7 +58,19 @@ app/src/main/java/com/smartfit/ble/
 └── ui/            # splash, login, main, dashboard, history, graphs, devices,
                    #   add-entry, profile, information (AI chat)
 shared/            # shared module (BLE protocol / cross-cutting code)
+firmware/          # ESP32 firmware for the BLE health monitor device
 ```
+
+## Firmware
+
+[`firmware/sketch_apr30a_latest/`](firmware/sketch_apr30a_latest) contains the Arduino sketch that runs on the ESP32-based BLE device. It:
+
+- Reads heart rate and SpO2 from a MAX30105 pulse oximeter
+- Reads body temperature from an MLX90614 IR sensor
+- Shows live readings on an SSD1306 OLED display
+- Advertises a BLE GATT service/characteristic that the Android app connects to and reads vitals from
+
+Flash it with the Arduino IDE (install the MAX30105, Adafruit SSD1306/GFX, Adafruit MLX90614, and ESP32 BLE libraries first).
 
 ## Getting started
 
