@@ -84,7 +84,7 @@ The app also ships with dark mode, full Hindi localisation, MPAndroidChart trend
 
 ### 📡 BLE Device Integration
 - Scans for the SmartFit sensor using a **service-UUID filter** so unrelated BLE devices never appear.
-- Connects over GATT, **negotiates MTU 512** so the ~24-byte vitals string is never silently truncated at the default 20-byte payload.
+- Connects over GATT and discovers the SmartFit vitals service.
 - Subscribes to characteristic notifications and **filters zero-value mid-measurement packets** at both the `BleRepository` and ViewModel layers.
 - `suppressAutoSave` flag lets the Add Entry dialog attach a patient name and age before a BLE reading is persisted.
 - Foreground `HealthService` keeps the GATT connection alive while a device is connected.
@@ -419,18 +419,20 @@ users/{uid}/health_records/{id}  mirror of the Room row
 
 ## Testing
 
-### White-box
-- **Unit tests** with MockK-style isolation of `BleRepository` from the Android BLE stack: simulated GATT notification streams exercise `parseVitals()` against corrupted bytes, incomplete packets and unexpected UTF-8; the **zero-packet filter** is verified to ignore every *Processing*-state packet and accept only the *Finalize* packet.
-- **DAO tests** on `Room.inMemoryDatabaseBuilder` with concurrent insert/query coroutines to confirm thread-safety.
-- **Branch coverage** via the Kover Gradle plugin — > 90 % on the BLE state machine, including the ESP32-disconnects-mid-measurement path (adapter reset → *Disconnected* state, no zombie *Processing* loop).
+### Automated
+- **JVM unit test** — `HealthRecordTest` checks the blood-pressure formatting on `HealthRecord`. That is the whole automated suite today; there is no CI workflow yet.
 
-### Black-box
-- **Soak testing** of the GATT link over extended sessions to catch OS background-optimisation drops.
-- **AI stress payloads** (extreme / empty / malformed vitals) to confirm `GroqAiService` never crashes the UI on unexpected JSON.
-- **Offline-first validation**: airplane mode → save several records → reconnect → verify upload with no loss or duplication.
-- **Localisation & theming** sweep in Hindi and dark mode for hard-coded strings and Material 3 surface compliance.
+### Not automated yet (next)
+- `parseVitals()` against corrupted bytes, incomplete packets and unexpected UTF-8, and the zero-packet filter (ignore *Processing* packets, accept only *Finalize*).
+- Room DAO tests on `Room.inMemoryDatabaseBuilder` with concurrent coroutines.
+- Branch coverage of the BLE state machine (Kover), including the ESP32-disconnects-mid-measurement path.
 
-### Sample test cases
+### Manual checks
+- **Offline-first**: airplane mode → save several records → reconnect → upload with no loss or duplication.
+- **AI payloads**: extreme / empty / malformed vitals do not crash the UI when `GroqAiService` returns unexpected JSON.
+- **Localisation & theming**: Hindi and dark mode swept for hard-coded strings.
+
+### Manual test cases (OnePlus, Android 11, with the ESP32 module)
 
 | ID | Scenario | Input | Expected | Result |
 |---|---|---|---|---|
@@ -441,7 +443,7 @@ users/{uid}/health_records/{id}  mirror of the Room row
 | TC-06 | AI triage — Normal | HR 72, SpO₂ 98, 98.6 °F | 🟢 Normal | ✅ |
 | TC-07 | Patient search | "John" | Filtered list; charts if ≥ 2 records | ✅ |
 | TC-09 | BLE scan filter | SmartFit + unrelated device in range | Only SmartFit listed | ✅ |
-| TC-10 | MTU negotiation | connect to ESP32 | MTU 512; `HR:72,SpO2:98,Temp:98.6` received intact | ✅ |
+| TC-10 | Final packet | connect to ESP32, take a reading | `HR:72,SpO2:98,Temp:98.6` received intact in one notification | ✅ |
 | TC-11 | Zero-packet filter | `HR:0,SpO2:0,Temp:0.0` | Not saved; ViewModel waits for pulse > 0 | ✅ |
 | TC-12 | `suppressAutoSave` | BLE mode, final reading arrives | Repository does not auto-save; ViewModel captures reading | ✅ |
 | TC-13 | Dark mode toggle | Profile → toggle | Theme switches immediately; persisted | ✅ |
@@ -480,11 +482,13 @@ users/{uid}/health_records/{id}  mirror of the Room row
 - **API key handling** — `GROQ_API_KEY` must be supplied via `local.properties` / a secrets manager; never commit it as a literal `buildConfigField`.
 - **Destructive migration** — Room uses `fallbackToDestructiveMigration()`; schema changes wipe local data until proper migrations are written.
 - **KMP stubs** — `BleManager.android.kt` / `BleManager.ios.kt` in `:shared` are placeholders; real BLE logic lives in `:app`'s `BleRepository`. `AuthClient` points at a dummy endpoint, not Firebase.
+- **Measurement accuracy is not validated** — readings have not been compared against a reference pulse oximeter or clinical thermometer. Heart rate is multiplied by an empirical `HR_CORRECTION = 0.75`.
+- **Readings are clamped** — the firmware floors heart rate at 70 bpm and caps it at 150, and clamps body temperature to 36–39 °C (then caps at 102 °F). A resting 60 bpm reads as 70, and fever above 102 °F or hypothermia cannot be reported, so the device output must not drive triage on its own. Reporting raw values with an out-of-range flag is the fix.
 - **Limited unit tests** — only `HealthRecordTest.kt` is committed; ViewModel / Repository / BLE coroutine tests should be added before production.
 - **`suppressAutoSave` thread-safety** — a `@Volatile` flag is fine for the single-writer case but an `AtomicBoolean` would be stricter.
 - **`ACCESS_BACKGROUND_LOCATION`** is declared but likely unnecessary for a foreground-only BLE use case and may complicate Play Store review.
-- **MTU assumption** — the app requests MTU 512 and assumes acceptance; `onMtuChanged()` logs but does not adapt parsing if a device negotiates lower.
-- **Temperature calibration** — the +7.5 °C offset and 36–42 °C clamp are empirically tuned for one sensor batch/environment.
+- **MTU** — the firmware sets a local MTU of 185, but the app never calls `requestMtu()`. A full final packet (`HR:72,SpO2:98,Temp:98.6`, 23 bytes) is larger than the default 20-byte notification payload, so on a phone that keeps the default MTU the temperature can arrive truncated. Fix: `gatt.requestMtu(185)` after connecting and discover services in `onMtuChanged()`.
+- **Temperature calibration** — the +7.5 °C skin-to-core offset is empirically tuned for one sensor batch and environment.
 - **AI needs internet** — no on-device fallback model.
 - **Out of scope**: EHR / pharmacy integration, languages beyond English & Hindi, automated BP-cuff support.
 
